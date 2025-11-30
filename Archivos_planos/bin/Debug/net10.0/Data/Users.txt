@@ -1,0 +1,3 @@
+jzuluaga,P@ssw0rd123!,true
+mbedoya,S0yS3gur02025*,false
+arodriguez,P4ssw0rd_Test,true

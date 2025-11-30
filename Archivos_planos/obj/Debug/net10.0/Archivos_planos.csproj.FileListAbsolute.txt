@@ -1,0 +1,17 @@
+C:\Users\Alejandro\source\repos\Archivos_planos\Archivos_planos\obj\Debug\net10.0\Archivos_planos.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Alejandro\source\repos\Archivos_planos\Archivos_planos\obj\Debug\net10.0\Archivos_planos.AssemblyInfoInputs.cache
+C:\Users\Alejandro\source\repos\Archivos_planos\Archivos_planos\obj\Debug\net10.0\Archivos_planos.AssemblyInfo.cs
+C:\Users\Alejandro\source\repos\Archivos_planos\Archivos_planos\obj\Debug\net10.0\Archivos_planos.csproj.CoreCompileInputs.cache
+C:\Users\Alejandro\source\repos\Archivos_planos\Archivos_planos\bin\Debug\net10.0\Archivos_planos.exe
+C:\Users\Alejandro\source\repos\Archivos_planos\Archivos_planos\bin\Debug\net10.0\Archivos_planos.deps.json
+C:\Users\Alejandro\source\repos\Archivos_planos\Archivos_planos\bin\Debug\net10.0\Archivos_planos.runtimeconfig.json
+C:\Users\Alejandro\source\repos\Archivos_planos\Archivos_planos\bin\Debug\net10.0\Archivos_planos.dll
+C:\Users\Alejandro\source\repos\Archivos_planos\Archivos_planos\bin\Debug\net10.0\Archivos_planos.pdb
+C:\Users\Alejandro\source\repos\Archivos_planos\Archivos_planos\obj\Debug\net10.0\Archivos_planos.dll
+C:\Users\Alejandro\source\repos\Archivos_planos\Archivos_planos\obj\Debug\net10.0\refint\Archivos_planos.dll
+C:\Users\Alejandro\source\repos\Archivos_planos\Archivos_planos\obj\Debug\net10.0\Archivos_planos.pdb
+C:\Users\Alejandro\source\repos\Archivos_planos\Archivos_planos\obj\Debug\net10.0\Archivos_planos.genruntimeconfig.cache
+C:\Users\Alejandro\source\repos\Archivos_planos\Archivos_planos\obj\Debug\net10.0\ref\Archivos_planos.dll
+C:\Users\Alejandro\source\repos\Archivos_planos\Archivos_planos\bin\Debug\net10.0\Data\datos_personas.txt
+C:\Users\Alejandro\source\repos\Archivos_planos\Archivos_planos\bin\Debug\net10.0\Data\log.txt
+C:\Users\Alejandro\source\repos\Archivos_planos\Archivos_planos\bin\Debug\net10.0\Data\Users.txt
