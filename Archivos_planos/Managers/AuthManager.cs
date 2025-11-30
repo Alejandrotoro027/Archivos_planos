@@ -8,7 +8,11 @@ namespace Archivos_planos.Managers
 {
     public static class AuthManager
     {
-        private const string UsersFilePath = "Data/Users.txt";
+
+        private static readonly string ProjectRoot = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../"));
+        private static readonly string UsersFilePath = Path.Combine(ProjectRoot, "Data/Users.txt");
+
+
         private static List<Usuario> _usuarios = new List<Usuario>();
 
         public static List<Usuario> CargarUsuarios()
@@ -37,6 +41,15 @@ namespace Archivos_planos.Managers
                         Contrasena = parts[1].Trim(),
                         Activo = activo
                     };
+
+                    if (parts.Length >= 4 && int.TryParse(parts[3].Trim(), out int intentos))
+                    {
+                        usuario.IntentosFallidos = intentos;
+                    }
+                    else
+                    {
+                        usuario.IntentosFallidos = 0;
+                    }
                     _usuarios.Add(usuario);
                 }
             }
@@ -45,10 +58,17 @@ namespace Archivos_planos.Managers
 
         public static void GuardarUsuarios()
         {
-            var lines = _usuarios.Select(u =>
-                $"{u.NombreUsuario},{u.Contrasena},{u.Activo.ToString().ToLower()}");
+            try
+            {
+                var lines = _usuarios.Select(u =>
+                    $"{u.NombreUsuario},{u.Contrasena},{u.Activo.ToString().ToLower()},{u.IntentosFallidos}");
 
-            File.WriteAllLines(UsersFilePath, lines);
+                File.WriteAllLines(UsersFilePath, lines);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"\n[ERROR CRÃTICO DE ARCHIVO] No se pudo guardar Users.txt: {ex.Message}");
+            }
         }
 
         public static Usuario? Autenticar()
@@ -59,14 +79,14 @@ namespace Archivos_planos.Managers
             }
 
             Console.WriteLine("===============================");
-            Console.WriteLine("    Sistema de Autenticación");
+            Console.WriteLine("    Sistema de AutenticaciÃ³n");
             Console.WriteLine("===============================");
 
             while (true)
             {
                 Console.Write("Ingrese usuario: ");
                 string? user = Console.ReadLine();
-                Console.Write("Ingrese contraseña: ");
+                Console.Write("Ingrese contraseÃ±a: ");
                 string? pass = Console.ReadLine();
 
                 var usuarioEncontrado = _usuarios.FirstOrDefault(u => u.NombreUsuario.Equals(user, StringComparison.OrdinalIgnoreCase));
@@ -75,13 +95,15 @@ namespace Archivos_planos.Managers
                 {
                     if (!usuarioEncontrado.Activo)
                     {
+                        LogManager.EscribirLog(usuarioEncontrado.NombreUsuario, "Intento de acceso denegado (usuario bloqueado).");
                         Console.WriteLine("USUARIO BLOQUEADO. No se permite la entrada.");
                         continue;
                     }
 
                     if (usuarioEncontrado.Contrasena == pass)
                     {
-                        Console.WriteLine($"¡Bienvenido, {usuarioEncontrado.NombreUsuario}!");
+                        LogManager.EscribirLog(usuarioEncontrado.NombreUsuario, "AutenticaciÃ³n exitosa.");
+                        Console.WriteLine($"Â¡Bienvenido, {usuarioEncontrado.NombreUsuario}!");
                         usuarioEncontrado.IntentosFallidos = 0;
                         GuardarUsuarios();
                         return usuarioEncontrado;
@@ -89,19 +111,25 @@ namespace Archivos_planos.Managers
                     else
                     {
                         usuarioEncontrado.IntentosFallidos++;
-                        Console.WriteLine($"Contraseña incorrecta. Intento {usuarioEncontrado.IntentosFallidos} de 3.");
+                        LogManager.EscribirLog(usuarioEncontrado.NombreUsuario, $"Intento de contraseÃ±a fallido ({usuarioEncontrado.IntentosFallidos} de 3).");
+                        Console.WriteLine($"ContraseÃ±a incorrecta. Intento {usuarioEncontrado.IntentosFallidos} de 3.");
 
                         if (usuarioEncontrado.IntentosFallidos >= 3)
                         {
                             usuarioEncontrado.Activo = false;
                             GuardarUsuarios();
-                            Console.WriteLine("ATENCIÓN: Ha fallado 3 veces. El usuario ha sido BLOQUEADO.");
+                            LogManager.EscribirLog(usuarioEncontrado.NombreUsuario, "USUARIO BLOQUEADO por fallos de contraseÃ±a.");
+                            Console.WriteLine("ATENCIÃ“N: Ha fallado 3 veces. El usuario ha sido BLOQUEADO.");
+                        }
+                        else
+                        {
+                            GuardarUsuarios();
                         }
                     }
                 }
                 else
                 {
-                    Console.WriteLine("Usuario o contraseña incorrectos.");
+                    Console.WriteLine("Usuario o contraseÃ±a incorrectos.");
                 }
 
                 Console.WriteLine("-------------------------------");
