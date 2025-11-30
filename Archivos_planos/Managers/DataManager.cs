@@ -10,7 +10,11 @@ namespace Archivos_planos.Managers
 {
     public static class DataManager
     {
-        private const string PersonasFilePath = "Data/datos_personas.txt";
+
+        private static readonly string ProjectRoot = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../"));
+        private static readonly string PersonasFilePath = Path.Combine(ProjectRoot, "Data/datos_personas.txt");
+
+
         private static List<Persona> _personas = new List<Persona>();
 
         public static List<Persona> CargarPersonas()
@@ -18,7 +22,7 @@ namespace Archivos_planos.Managers
             _personas = new List<Persona>();
             if (!File.Exists(PersonasFilePath))
             {
-                Console.WriteLine($"Advertencia: Archivo de personas no encontrado en {PersonasFilePath}. Se creará al guardar.");
+                Console.WriteLine($"Advertencia: Archivo de personas no encontrado en {PersonasFilePath}. Se crearÃ¡ al guardar.");
                 return _personas;
             }
 
@@ -46,7 +50,7 @@ namespace Archivos_planos.Managers
                 }
                 else
                 {
-                    Console.WriteLine($"Advertencia: Línea con formato inválido omitida: {line}");
+                    Console.WriteLine($"Advertencia: LÃ­nea con formato invÃ¡lido omitida: {line}");
                 }
             }
             return _personas;
@@ -54,12 +58,19 @@ namespace Archivos_planos.Managers
 
         public static void GuardarPersonas(string usuarioEjecuta)
         {
-            var lines = _personas.Select(p =>
-                $"{p.Id},{p.Nombres},{p.Apellidos},{p.Telefono},{p.Ciudad},{p.Balance:0.00}");
+            try
+            {
+                var lines = _personas.Select(p =>
+                    $"{p.Id},{p.Nombres},{p.Apellidos},{p.Telefono},{p.Ciudad},{p.Balance:0.00}");
 
-            File.WriteAllLines(PersonasFilePath, lines);
-            LogManager.EscribirLog(usuarioEjecuta, "Persistencia de datos: Cambios guardados en datos_personas.txt.");
-            Console.WriteLine("\nCAMBIOS GUARDADOS exitosamente.");
+                File.WriteAllLines(PersonasFilePath, lines);
+                LogManager.EscribirLog(usuarioEjecuta, "Persistencia de datos: Cambios guardados en datos_personas.txt.");
+                Console.WriteLine("\nCAMBIOS GUARDADOS exitosamente.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"\n[ERROR CRÃTICO DE ARCHIVO] No se pudo guardar datos_personas.txt en la carpeta del cÃ³digo fuente: {ex.Message}");
+            }
         }
 
         public static void MostrarContenido(string usuarioEjecuta)
@@ -72,15 +83,15 @@ namespace Archivos_planos.Managers
             }
 
             Console.WriteLine("\n========================================================");
-            Console.WriteLine("ID\tNombres\t\tTeléfono\tCiudad\t\tBalance");
-            Console.WriteLine("—\t———————\t\t———————\t\t———————\t\t———————");
+            Console.WriteLine("ID\tNombres\t\tTelÃ©fono\tCiudad\t\tBalance");
+            Console.WriteLine("â€”\tâ€”â€”â€”â€”â€”â€”â€”\t\tâ€”â€”â€”â€”â€”â€”â€”\t\tâ€”â€”â€”â€”â€”â€”â€”\t\tâ€”â€”â€”â€”â€”â€”â€”");
 
             foreach (var p in _personas)
             {
                 Console.WriteLine($"{p.Id}\t{p.Nombres} {p.Apellidos}\t{p.Telefono}\t{p.Ciudad}\t\t{p.Balance:N2}");
             }
             Console.WriteLine("========================================================");
-            LogManager.EscribirLog(usuarioEjecuta, "Visualización de contenido de personas.");
+            LogManager.EscribirLog(usuarioEjecuta, "VisualizaciÃ³n de contenido de personas.");
         }
 
 
@@ -93,7 +104,7 @@ namespace Archivos_planos.Managers
         {
             if (esNuevo && _personas.Any(p => p.Id == id))
             {
-                Console.WriteLine("Error: El ID debe ser único y ya existe.");
+                Console.WriteLine("Error: El ID debe ser Ãºnico y ya existe.");
                 return false;
             }
 
@@ -105,13 +116,13 @@ namespace Archivos_planos.Managers
 
             if (!ValidarTelefono(telefono))
             {
-                Console.WriteLine("Error: El teléfono no es válido. Debe contener solo números y tener una longitud razonable (ej. 7-15 dígitos).");
+                Console.WriteLine("Error: El telÃ©fono no es vÃ¡lido. Debe contener solo nÃºmeros y tener una longitud razonable (ej. 7-15 dÃ­gitos).");
                 return false;
             }
 
             if (balance <= 0)
             {
-                Console.WriteLine("Error: El saldo (balance) debe ser un número positivo.");
+                Console.WriteLine("Error: El saldo (balance) debe ser un nÃºmero positivo.");
                 return false;
             }
 
@@ -129,7 +140,7 @@ namespace Archivos_planos.Managers
 
             while (!idValido)
             {
-                Console.Write("Ingrese ID (debe ser único y numérico): ");
+                Console.Write("Ingrese ID (debe ser Ãºnico y numÃ©rico): ");
                 if (int.TryParse(Console.ReadLine(), out id))
                 {
                     if (!_personas.Any(p => p.Id == id))
@@ -143,7 +154,7 @@ namespace Archivos_planos.Managers
                 }
                 else
                 {
-                    Console.WriteLine("Error: El ID debe ser un número.");
+                    Console.WriteLine("Error: El ID debe ser un nÃºmero.");
                 }
             }
 
@@ -151,7 +162,7 @@ namespace Archivos_planos.Managers
             nombres = Console.ReadLine() ?? string.Empty;
             Console.Write("Ingrese Apellidos: ");
             apellidos = Console.ReadLine() ?? string.Empty;
-            Console.Write("Ingrese Teléfono: ");
+            Console.Write("Ingrese TelÃ©fono: ");
             telefono = Console.ReadLine() ?? string.Empty;
             Console.Write("Ingrese Ciudad: ");
             ciudad = Console.ReadLine() ?? string.Empty;
@@ -166,7 +177,7 @@ namespace Archivos_planos.Managers
                 }
                 else
                 {
-                    Console.WriteLine("Error: El saldo debe ser un número válido.");
+                    Console.WriteLine("Error: El saldo debe ser un nÃºmero vÃ¡lido.");
                 }
             }
 
@@ -181,12 +192,12 @@ namespace Archivos_planos.Managers
                     Ciudad = ciudad,
                     Balance = balance
                 });
-                Console.WriteLine($"\nPersona ID {id} agregada temporalmente. ¡Recuerde Guardar Cambios!");
+                Console.WriteLine($"\nPersona ID {id} agregada temporalmente. Â¡Recuerde Guardar Cambios!");
                 LogManager.EscribirLog(usuarioEjecuta, $"Persona agregada: ID {id} - {nombres} {apellidos}.");
             }
             else
             {
-                Console.WriteLine("\nNo se pudo agregar la persona debido a errores de validación.");
+                Console.WriteLine("\nNo se pudo agregar la persona debido a errores de validaciÃ³n.");
             }
         }
 
@@ -197,7 +208,7 @@ namespace Archivos_planos.Managers
 
             if (!int.TryParse(Console.ReadLine(), out int idBuscado))
             {
-                Console.WriteLine("Error: El ID debe ser un número.");
+                Console.WriteLine("Error: El ID debe ser un nÃºmero.");
                 return;
             }
 
@@ -205,7 +216,7 @@ namespace Archivos_planos.Managers
 
             if (personaAEditar == null)
             {
-                Console.WriteLine($"Error: No se encontró ninguna persona con el ID {idBuscado}.");
+                Console.WriteLine($"Error: No se encontrÃ³ ninguna persona con el ID {idBuscado}.");
                 return;
             }
 
@@ -228,8 +239,8 @@ namespace Archivos_planos.Managers
                 personaAEditar.Apellidos = nuevoApellidos;
             }
 
-            // Teléfono
-            Console.Write($"Teléfono ({personaAEditar.Telefono}): ");
+            // TelÃ©fono
+            Console.Write($"TelÃ©fono ({personaAEditar.Telefono}): ");
             string? nuevoTelefono = Console.ReadLine();
             if (!string.IsNullOrEmpty(nuevoTelefono))
             {
@@ -239,7 +250,7 @@ namespace Archivos_planos.Managers
                 }
                 else
                 {
-                    Console.WriteLine("Advertencia: Valor inválido. Se mantendrá el teléfono previo.");
+                    Console.WriteLine("Advertencia: Valor invÃ¡lido. Se mantendrÃ¡ el telÃ©fono previo.");
                 }
             }
 
@@ -261,17 +272,17 @@ namespace Archivos_planos.Managers
                 }
                 else
                 {
-                    Console.WriteLine("Advertencia: Valor inválido. El saldo debe ser un número positivo. Se mantendrá el balance previo.");
+                    Console.WriteLine("Advertencia: Valor invÃ¡lido. El saldo debe ser un nÃºmero positivo. Se mantendrÃ¡ el balance previo.");
                 }
             }
 
             if (string.IsNullOrWhiteSpace(personaAEditar.Nombres) || string.IsNullOrWhiteSpace(personaAEditar.Apellidos))
             {
-                Console.WriteLine("\nError crítico: Nombres y Apellidos son obligatorios y no pueden quedar vacíos.");
+                Console.WriteLine("\nError crÃ­tico: Nombres y Apellidos son obligatorios y no pueden quedar vacÃ­os.");
             }
             else
             {
-                Console.WriteLine($"\nPersona ID {idBuscado} actualizada temporalmente. ¡Recuerde Guardar Cambios!");
+                Console.WriteLine($"\nPersona ID {idBuscado} actualizada temporalmente. Â¡Recuerde Guardar Cambios!");
                 LogManager.EscribirLog(usuarioEjecuta, $"Persona editada: ID {idBuscado} - {personaAEditar.Nombres} {personaAEditar.Apellidos}.");
             }
         }
@@ -283,7 +294,7 @@ namespace Archivos_planos.Managers
 
             if (!int.TryParse(Console.ReadLine(), out int idBuscado))
             {
-                Console.WriteLine("Error: El ID debe ser un número.");
+                Console.WriteLine("Error: El ID debe ser un nÃºmero.");
                 return;
             }
 
@@ -291,31 +302,31 @@ namespace Archivos_planos.Managers
 
             if (personaABorrar == null)
             {
-                Console.WriteLine($"Error: No se encontró ninguna persona con el ID {idBuscado}.");
+                Console.WriteLine($"Error: No se encontrÃ³ ninguna persona con el ID {idBuscado}.");
                 return;
             }
 
             Console.WriteLine("\nDatos de la persona a borrar:");
             Console.WriteLine($"ID: {personaABorrar.Id}");
             Console.WriteLine($"Nombres: {personaABorrar.Nombres} {personaABorrar.Apellidos}");
-            Console.WriteLine($"Teléfono: {personaABorrar.Telefono}");
+            Console.WriteLine($"TelÃ©fono: {personaABorrar.Telefono}");
             Console.WriteLine($"Ciudad: {personaABorrar.Ciudad}");
             Console.WriteLine($"Balance: {personaABorrar.Balance:N2}");
             Console.WriteLine("-----------------------------------");
 
-            Console.Write("¿Está seguro que desea borrar esta persona? (S/N): ");
+            Console.Write("Â¿EstÃ¡ seguro que desea borrar esta persona? (S/N): ");
             string? confirmacion = Console.ReadLine();
 
             if (confirmacion?.Trim().ToUpper() == "S")
             {
                 _personas.Remove(personaABorrar);
-                Console.WriteLine($"\nPersona ID {idBuscado} eliminada temporalmente. ¡Recuerde Guardar Cambios!");
+                Console.WriteLine($"\nPersona ID {idBuscado} eliminada temporalmente. Â¡Recuerde Guardar Cambios!");
 
                 LogManager.EscribirLog(usuarioEjecuta, $"Persona eliminada: ID {idBuscado} - {personaABorrar.Nombres} {personaABorrar.Apellidos}.");
             }
             else
             {
-                Console.WriteLine("\nOperación de borrado cancelada.");
+                Console.WriteLine("\nOperaciÃ³n de borrado cancelada.");
             }
         }
 
@@ -346,7 +357,7 @@ namespace Archivos_planos.Managers
                 Console.WriteLine($"\nCiudad: {grupo.Ciudad}\n");
 
                 Console.WriteLine("ID\tNombres\t\tApellidos\tSaldo");
-                Console.WriteLine("—\t———————\t\t———————\t\t———————");
+                Console.WriteLine("â€”\tâ€”â€”â€”â€”â€”â€”â€”\t\tâ€”â€”â€”â€”â€”â€”â€”\t\tâ€”â€”â€”â€”â€”â€”â€”");
 
                 foreach (var p in grupo.Personas.OrderBy(p => p.Id))
                 {
@@ -363,7 +374,7 @@ namespace Archivos_planos.Managers
             Console.WriteLine($"Total General:\t\t\t\t{totalGeneral:N2}");
             Console.WriteLine("--------------------------------------");
 
-            LogManager.EscribirLog(usuarioEjecuta, "Generación de informe con subtotales.");
+            LogManager.EscribirLog(usuarioEjecuta, "GeneraciÃ³n de informe con subtotales.");
         }
     }
 }
