@@ -1,0 +1,4 @@
+1,Juan,Zuluaga,3105551000,Medellin,5000,00
+2,Luisa,Calle,3004442000,Medellin,4000,00
+3,Carmen,Gutierrez,3203333000,Palmira,1000,00
+4,Pedro,Perez,3112224000,Cali,7500,50
