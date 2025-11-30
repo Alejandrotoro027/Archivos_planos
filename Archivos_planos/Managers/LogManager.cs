@@ -5,11 +5,13 @@ namespace Archivos_planos.Managers
 {
     public static class LogManager
     {
-        private const string LogFilePath = "Data/log.txt";
+        private static readonly string ProjectRoot = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../"));
+        private static readonly string LogFilePath = Path.Combine(ProjectRoot, "Data/log.txt");
+
 
         public static void EscribirLog(string nombreUsuario, string operacion)
         {
-            string logEntry = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - USUARIO: {nombreUsuario} - OPERACIÓN: {operacion}";
+            string logEntry = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - USUARIO: {nombreUsuario} - OPERACIÃ“N: {operacion}";
 
             try
             {
@@ -17,7 +19,7 @@ namespace Archivos_planos.Managers
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error al escribir en el log: {ex.Message}");
+                Console.WriteLine($"\n[ERROR DE LOG] Fallo al escribir en log.txt: {ex.Message}");
             }
         }
     }
